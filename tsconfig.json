@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "ESNext",
+    "jsx": "react-native",
+    "outDir": "./lib/",
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "sourceMap": false,
+    "experimentalDecorators": true,
+    "preserveConstEnums": true,
+    "allowJs": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "skipLibCheck": true,
+    "moduleResolution": "Node",
+    "baseUrl": "./src/components",
+    "paths": {
+      "@components/*": [
+        "src/components/*"
+      ]
+    }
+  },
+  "types": [
+    "react",
+    "react-dom",
+    "react-native"
+  ],
+  "include": [
+    "static.d.ts",
+    "./src/components"
+  ],
+  "exclude":[
+    "lib",
+    "node_modules",
+  ],
+  "compileOnSave": false
+}
