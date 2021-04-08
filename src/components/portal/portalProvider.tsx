@@ -1,26 +1,35 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { View } from 'react-native';
 import PortalContext from './portalContext';
 import { PortalManager } from './portalManager';
 
 type Operation = 
-| { type: 'mount'; key: number; children: React.ReactNode, zIndex?: number }
-| { type: 'update'; key: number; children: React.ReactNode, zIndex?: number }
+| { type: 'mount'; key: number; children: ReactNode, zIndex?: number }
+| { type: 'update'; key: number; children: ReactNode, zIndex?: number }
 | { type: 'unmount'; key: number, zIndex?: number };
 
 type ProviderProps = {
-    children: React.ReactNode,
+    children: ReactNode,
 }
 
-export default class PortalProvider extends React.PureComponent<ProviderProps> {
+let providerList: PortalProvider[] = [];
+let providerIndex: number = 0;
+
+class PortalProvider extends React.PureComponent<ProviderProps> {
+    static get displayName() { return 'PortalProvider' };
+    static mount: (children: ReactNode, zIndex?: number) => number;
+    static update: (key: number, children:ReactNode) => void;
+    static unmount: (key: number) => void;
+
+    providerKey = providerIndex++;
     private nextKey: number = 0;
-
     private queue: Operation[] = [];
-
     private manager: PortalManager | null | undefined = null;
 
-    private setManager(manager: PortalManager | null | undefined) {
-        this.manager = manager;
+    constructor(props: ProviderProps) {
+        super(props);
+        // 闭包存储Provider实例
+        providerList.push(this);
     }
 
     componentDidMount() {
@@ -51,8 +60,17 @@ export default class PortalProvider extends React.PureComponent<ProviderProps> {
         }
     }
 
+    componentWillUnmount() {
+        // 组件卸载时，实例从存储中移除
+        providerList = providerList.filter(p => p.providerKey !== this.providerKey);
+    }
+
+    private setManager(manager: PortalManager | null | undefined) {
+        this.manager = manager;
+    }
+
     // 挂载
-    private mount(children: React.ReactNode, zIndex: number): number {
+    mount(children: ReactNode, zIndex: number): number {
         const key = this.nextKey++;
         if (this.manager) {
             this.manager.mount({key, children, zIndex})
@@ -69,7 +87,7 @@ export default class PortalProvider extends React.PureComponent<ProviderProps> {
     }
 
     // 更新
-    private update(key: number, children: React.ReactNode): void {
+    update(key: number, children: React.ReactNode): void {
         if (this.manager) {
             this.manager.update(key, children);
         } else {
@@ -88,7 +106,7 @@ export default class PortalProvider extends React.PureComponent<ProviderProps> {
     }
 
     // 卸载
-    private unmount(key: number): void {
+    unmount(key: number): void {
         if (this.manager) {
             this.manager.unmount(key);
         } else {
@@ -117,3 +135,37 @@ export default class PortalProvider extends React.PureComponent<ProviderProps> {
         );
     }
 }
+
+PortalProvider.mount = function(children: ReactNode, zIndex: number): number {
+    checkPortalEmpty(true);
+    const provider = providerList[providerList.length - 1];
+    return provider.mount(children, zIndex);
+}
+
+PortalProvider.update = function(key: number, children: ReactNode): void {
+    if ( checkPortalEmpty() ) {
+        return
+    }
+    const provider = providerList[providerList.length - 1];
+    provider.update(key, children);
+}
+
+PortalProvider.unmount = function(key: number): void {
+    if ( checkPortalEmpty() ) {
+        return
+    }
+    const provider = providerList[providerList.length - 1];
+    provider.unmount(key);
+}
+
+function checkPortalEmpty (throwError: boolean = false): boolean {
+    if (providerList.length <= 0) {
+        if (throwError) {
+            throw new Error('PortalProvider: Looks like you forgot to wrap your root component with `PortalProvider` component from t-design');
+        }
+        return true;
+    }
+    return false
+}
+
+export default PortalProvider;

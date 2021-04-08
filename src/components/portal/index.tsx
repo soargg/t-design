@@ -17,6 +17,8 @@ type PortalProps = {
 };
 
 export default class Portal extends React.PureComponent<PortalProps> {
+    static get displayName() { return 'Portal' };
+
     static Provider = PortalProvider;
 
     render() {

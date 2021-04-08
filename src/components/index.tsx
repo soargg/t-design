@@ -1,6 +1,7 @@
-const TDesign = {
-    get Portal() { return require('./portal').default },
-    get PortalProvider() { return require('./portal/portalProvider').default }
-}
+import Portal from './portal';
+import  PortalProvider from './portal/portalProvider';
 
-module.exports = TDesign;
+export {
+    Portal,
+    PortalProvider
+}
