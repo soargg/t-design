@@ -16,7 +16,7 @@ let providerList: PortalProvider[] = [];
 let providerIndex: number = 0;
 
 class PortalProvider extends React.PureComponent<ProviderProps> {
-    static get displayName() { return 'PortalProvider' };
+    static get displayName() { return 'PortalProvider' }
     static mount: (children: ReactNode, zIndex?: number) => number;
     static update: (key: number, children:ReactNode) => void;
     static unmount: (key: number) => void;
