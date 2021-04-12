@@ -4,7 +4,10 @@ import {
     Toast,
     Popup,
     Rating,
-    CircularProgress
+    CircularProgress,
+    Alert,
+    Confirm,
+    Popover
 } from './components'
 
 export default class Home extends React.Component {
@@ -29,13 +32,19 @@ export default class Home extends React.Component {
                     }}
                     show={this.state.show}
                     onMaskPress={ () => {
-                        this.setState({ show: false })
+                        this.setState({ show: false });
+                        Confirm(() => <Text style={{color: 'red'}}>知道了</Text>)
                     }}
                 >
                     <Text>Hello world</Text>
                 </Popup>
                 <Rating />
                 <CircularProgress fill={68} size={80} width={5}/>
+                <Popover
+                    bubble={<Text style={{color: '#fff'}}>气泡气泡</Text>}
+                >
+                    <Text style={{backgroundColor: 'pink'}}>点我有气泡</Text>
+                </Popover>
             </View>
         );
     }
