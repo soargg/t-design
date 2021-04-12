@@ -1,6 +1,11 @@
 import React from 'react';
 import { View, Text, Button } from 'react-native';
-import { Toast, Popup } from './components'
+import {
+    Toast,
+    Popup,
+    Rating,
+    CircularProgress
+} from './components'
 
 export default class Home extends React.Component {
 
@@ -10,7 +15,7 @@ export default class Home extends React.Component {
 
     render() {
         return (
-            <View>
+            <View style={{ paddingHorizontal: 20 }}>
                 <Text>Hello world</Text>
                 <Button title="Toast" onPress={() => { Toast.loading('早点下班', 5000) }} />
                 <Button title="Popup" onPress={() => { this.setState({show: true}) }} />
@@ -29,6 +34,8 @@ export default class Home extends React.Component {
                 >
                     <Text>Hello world</Text>
                 </Popup>
+                <Rating />
+                <CircularProgress fill={68} size={80} width={5}/>
             </View>
         );
     }
