@@ -9,7 +9,7 @@
     "test": "jest",
     "lint": "eslint .",
     "tsc": "tsc",
-    "compile": "rimraf ./lib && yarn tsc --"
+    "compile": "rimraf ./lib && yarn tsc -- && ./comiple.sh"
   },
   "dependencies": {
     "react": "17.0.1",
