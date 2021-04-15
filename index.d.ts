@@ -351,3 +351,166 @@ type ConfirmContentModule = string | (() => React.ReactNode)
         zIndex?: number;
     }
 declare const Confirm: (content: ConfirmContentModule) => Promise<boolean>;
+
+/**
+ * Checkbox
+ */
+export type CheckboxValueType = string | number | boolean;
+
+export interface CheckboxOptionType {
+    label: React.ReactNode;
+    value: CheckboxValueType;
+    style?: StyleProp<ViewStyle>;
+    disabled?: boolean;
+    onChange?(next: boolean): void;
+}
+
+type CheckboxGroupProps = {
+    /**
+     * options
+     * 选择框列表
+     */
+    options?: Array<CheckboxOptionType | string>;
+    /**
+     * defaultValue
+     * more值列表
+     */
+    defaultValue?: CheckboxValueType[];
+    /**
+     * value
+     * 已选值列表
+     */
+    value?: CheckboxValueType[];
+    /**
+     * style
+     * Group样式
+     */
+    style?: StyleProp<ViewStyle>;
+    /**
+     * disabled
+     * 禁用
+     */
+    disabled?: boolean;
+    /**
+     * onChange
+     * 状态变化时回调
+     */
+    onChange?(checkedValue: CheckboxValueType[]): void;
+}
+
+declare class CheckboxGroup extends React.PureComponent<CheckboxGroupProps> { }
+
+interface CheckboxProps {
+    children?: React.ReactNode;
+    /**
+     * value
+     * checkbox的值 ，唯一
+     */
+    value?: string | number | boolean;
+    /**
+     * checked
+     * 是否选中
+     */
+    checked?: boolean;
+    /**
+     * disabled
+     * 禁用
+     */
+    disabled?: boolean;
+    /**
+     * style
+     * checkbox 容器的样式
+     */
+    style?: StyleProp<ViewStyle>;
+    /**
+     * checkboxType
+     * checkbox 类型，圆 或 方
+     */
+    checkboxType?: 'circle' | 'square';
+    /**
+     * indeterminate
+     * 不确定状态
+     */
+    indeterminate?: boolean;
+    /**
+     * onChange
+     * checkbox状态变化是回调
+     */
+    onChange?(next: boolean): void;
+}
+
+declare class Checkbox extends React.PureComponent<CheckboxProps> {
+    static readonly Group: typeof CheckboxGroup;
+}
+
+/**
+ * Radio
+ */
+export type RadioValueType = string | number | boolean;
+export type RadioOptionType = {
+    label: React.ReactNode;
+    value: RadioValueType;
+    style?: StyleProp<ViewStyle>;
+    disabled?: boolean;
+    onChange?(next: boolean): void;
+}
+
+type RadioGroupProps = {
+    /**
+     * options
+     * 选择框列表
+     */
+    options?: Array<RadioOptionType | string>;
+    /**
+     * defaultValue
+     * more值列表
+     */
+    defaultValue?: RadioValueType;
+    /**
+     * value
+     * 已选值列表
+     */
+    value?: RadioValueType;
+    /**
+     * style
+     * Group样式
+     */
+    style?: StyleProp<ViewStyle>;
+    /**
+     * disabled
+     * 禁用
+     */
+    disabled?: boolean;
+    /**
+     * onChange
+     * 状态变化时回调
+     */
+    onChange?(checkedValue: RadioValueType): void;
+}
+
+declare class RadioGroup extends React.PureComponent<RadioGroupProps>{ }
+
+type RadioProps = {
+    children?: React.ReactNode;
+    /**
+     * value
+     * radio的值 ，唯一
+     */
+    value?: RadioValueType;
+    /**
+     * checked
+     * 是否选中
+     */
+    checked?: boolean;
+    /**
+     * disabled
+     * 禁用
+     */
+    disabled?: boolean;
+    style?: StyleProp<ViewStyle>;
+    onChange?(next: boolean): void
+}
+
+declare class Radio extends React.PureComponent<RadioProps> {
+    static readonly Group: typeof RadioGroup;
+}

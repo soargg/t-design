@@ -7,6 +7,8 @@ import Popover from './popover';
 import Toast from './toast';
 import Confirm from './confirm';
 import Alert from './alert';
+import Checkbox from './checkbox';
+import Radio from './radio';
 
 export {
     Portal,
@@ -17,5 +19,7 @@ export {
     Popover,
     Toast,
     Confirm,
-    Alert
+    Alert,
+    Checkbox,
+    Radio
 }
