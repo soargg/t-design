@@ -8,8 +8,9 @@ import {
     Alert,
     Confirm,
     Popover
-} from './components'
+} from './components';
 
+import { SwiperLoop } from './page'
 export default class Home extends React.Component {
 
     state = {
@@ -45,6 +46,9 @@ export default class Home extends React.Component {
                 >
                     <Text style={{backgroundColor: 'pink'}}>点我有气泡</Text>
                 </Popover>
+                <View style={{height: 300}}> 
+                    <SwiperLoop />
+                </View>
             </View>
         );
     }
