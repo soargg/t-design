@@ -9,6 +9,7 @@ import Confirm from './confirm';
 import Alert from './alert';
 import Checkbox from './checkbox';
 import Radio from './radio';
+import Calendar from './calendar';
 
 export {
     Portal,
@@ -21,5 +22,6 @@ export {
     Confirm,
     Alert,
     Checkbox,
-    Radio
+    Radio,
+    Calendar
 }

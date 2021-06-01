@@ -10,6 +10,7 @@ const TDesign = {
     get Alert() { return require('./alert').default },
     get Checkbox() { return require('./checkbox').default },
     get Radio() { return require('./radio').default },
+    get Calendar() { return require('./calendar').default },
 }
 
 module.exports = TDesign;

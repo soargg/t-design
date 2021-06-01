@@ -1,3 +1,4 @@
+import { screenWidth, designWidth, p1x } from './index';
 // 是否是方法
 export function isFunction(it: any): boolean {
     return Object.prototype.toString.call(it) === '[object Function]';
@@ -29,4 +30,10 @@ export function getArrayByLength(length: number): null[] {
         ret[i] = null;
     }
     return ret;
+}
+
+// 多种屏幕宽度适配方案
+export function pTd( value: number ): number {
+    const scaleValue = Math.floor( value * ( screenWidth / designWidth ) + 0.5 );
+    return value > 0 && scaleValue === 0 ? p1x : scaleValue;
 }

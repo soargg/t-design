@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Text, Button, SafeAreaView } from 'react-native';
 import {
     Toast,
     Popup,
@@ -10,7 +10,7 @@ import {
     Popover
 } from './components';
 
-import { SwiperLoop } from './page'
+import { SwiperLoop, CalendarPage } from './page'
 export default class Home extends React.Component {
 
     state = {
@@ -19,7 +19,12 @@ export default class Home extends React.Component {
 
     render() {
         return (
-            <View style={{ paddingHorizontal: 20 }}>
+            <SafeAreaView style={{height: 700}}>
+                <CalendarPage />
+            </SafeAreaView>
+        )
+        return (
+            <View style={{ paddingHorizontal: 20,backgroundColor: 'red', flexGrow: 1 }}>
                 <Text>Hello world</Text>
                 <Button title="Toast" onPress={() => { Toast.loading('早点下班', 5000) }} />
                 <Button title="Popup" onPress={() => { this.setState({show: true}) }} />
@@ -46,9 +51,6 @@ export default class Home extends React.Component {
                 >
                     <Text style={{backgroundColor: 'pink'}}>点我有气泡</Text>
                 </Popover>
-                <View style={{height: 300}}> 
-                    <SwiperLoop />
-                </View>
             </View>
         );
     }
