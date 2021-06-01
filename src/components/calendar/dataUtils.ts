@@ -1,9 +1,9 @@
 export type DateModel = {
     date: string;
-    day: number;
     isToday: boolean;
     disabled: boolean; 
     placeholder: boolean;
+    day: number;
 }
 
 export type WeekGroup = {
@@ -129,7 +129,7 @@ function weekGroup<T extends any>(array: Array<T>, title: string, sectionIndex: 
     return newArray;
 }
 
-export const getDateMonthGroup = (start: Date, end: Date): DataSourceModal[] => {
+export const getDateMonthGroup = (start: Date, end: Date, allowSelectionBeforeToday:boolean = false): DataSourceModal[] => {
     const monthList: DataSourceModal[] = [];
 
     const [startYear, startMonth] = getDateInfoArr(start);
@@ -173,7 +173,7 @@ export const getDateMonthGroup = (start: Date, end: Date): DataSourceModal[] => 
                 placeholder: false,
                 day: day + 1,
                 isToday,
-                disabled: hasToday ? false : true
+                disabled: allowSelectionBeforeToday ? false : (hasToday ? false : true)
             }
         });
 

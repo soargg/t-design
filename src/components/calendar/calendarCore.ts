@@ -8,10 +8,16 @@ import {
     DateModel
 } from './dataUtils';
 
+type CoreProps = {
+    duration: number | [string, string];
+    allowSelectionBeforeToday: boolean;
+}
+
 export { DataSourceModal, WeekGroup, DateModel };
 
 export class CalendarCore {
-    // 其实日期
+    props: CoreProps;
+    // 起始日期
     startDate: Date;
     endDate: Date;
     // private dataSource: DataSourceModal[];
@@ -22,9 +28,11 @@ export class CalendarCore {
 
     /**
      * 更新日期
-     * @param props 
+     * @param props { CoreProps }
      */
-    update(duration: number | [string, string]) {
+    update(props: CoreProps) {
+        const { duration, allowSelectionBeforeToday } = props;
+
         if (Array.isArray(duration)) {
             const [start, end] = duration; 
             this.startDate = new Date(start);
@@ -44,9 +52,11 @@ export class CalendarCore {
         if (compareDate(this.startDate, this.endDate)) {
             [this.startDate, this.endDate] = [this.endDate, this.startDate];
         }
+
+        this.props = props;
     }
 
     getDateGroup(): DataSourceModal[] {
-        return getDateMonthGroup(this.startDate, this.endDate);
+        return getDateMonthGroup(this.startDate, this.endDate, this.props.allowSelectionBeforeToday);
     }
 }
