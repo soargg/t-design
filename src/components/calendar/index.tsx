@@ -1,7 +1,8 @@
 import React from 'react';
 import { SectionList, View, Text, TouchableWithoutFeedback } from 'react-native';
-import { isFunction } from '../common/utils';
-import { compareDate } from './dataUtils'; 
+import sectionListGetItemLayout from '../common/sectionListGetItemLayout';
+import {isFunction} from '../common/utils';
+import { compareDate, getWeekOrderInMonth } from './dataUtils';
 import { CalendarCore, DataSourceModal, WeekGroup, DateModel } from './calendarCore';
 import { Cell, CellProps } from './calendarCell';
 import styles from './styles';
@@ -11,6 +12,18 @@ import type { SectionListRenderItemInfo } from 'react-native';
 interface FromToModel {
     selectionStart: string;
     selectionEnd: string;
+}
+
+type CellParams = {
+    date: string;
+    day: number;
+    placeholder: boolean;
+    isToday: boolean;
+    disabled: boolean;
+    dateText: string;
+    isCheck: boolean;
+    isCheckIn: boolean;
+    isCheckOut: boolean;
 }
 interface CalendarProps {
     duration?: number | [string, string],
@@ -44,32 +57,50 @@ interface CalendarProps {
      * 允许选择今天之前的日期
      */
     allowSelectionBeforeToday?: boolean;
-    ListFooterComponent?: React.ComponentType<any> | React.ReactElement | null;
+    /**
+     * markedDates
+     * @param markedDates
+     * 每个日期额外的标记
+     */
+    markedDates?: {
+        [key: string]: {
+            [markingkey: string]: any;
+        };
+    };
      /**
      * readerDate
      * 自定义每一个日期格的样式
      */
-    renderDate?(day: CellProps): JSX.Element;
+    renderDate?(day: CellParams): JSX.Element;
     /**
      * onChange
      * @param fromTo FromToModel
      * 日期选择是回调
      */
     onChange?(fromTo: FromToModel): void;
+    /**
+     * Rendered at the very end of the list.
+     */
+    ListFooterComponent?: React.ComponentType<any> | React.ReactElement | null;
 }
 
 interface CalendarState {
-    beginDate: Date,
     monthData: DataSourceModal[]
 }
 
 const calendarCore = new CalendarCore;
 
 export default class Calendar extends React.PureComponent<CalendarProps, CalendarState> {
+    static get displayName() { return 'Calendar' };
     // 起始日期
     private selectionIn: string = this.props.selectionStart;
     // 结束日期
     private selectionOut: string = this.props.selectionEnd;
+
+    private SectionListRef: SectionList;
+    private itemHeight: number = 60;
+    private checkInItemIndex: number = 0;
+    private checkInSectionIndex: number = 0;
 
     constructor(props: CalendarProps) {
         super(props);
@@ -78,11 +109,70 @@ export default class Calendar extends React.PureComponent<CalendarProps, Calenda
         // 先更新
         calendarCore.update({duration, allowSelectionBeforeToday});
         this.state = {
-            monthData: calendarCore.getDateGroup(),
-            beginDate: calendarCore.startDate
+            monthData: calendarCore.getDateGroup()
+        }
+        console.log('耗时：', Date.now() - start);
+    }
+
+    static getDerivedStateFromProps(nextProps: CalendarProps) {
+        const prevPorps = calendarCore.props;
+        const { duration = 180, allowSelectionBeforeToday=false } = nextProps;
+        if (
+            JSON.stringify(duration) !== JSON.stringify(prevPorps.duration) ||
+            allowSelectionBeforeToday !== prevPorps.allowSelectionBeforeToday
+        ) {
+            calendarCore.update({ duration, allowSelectionBeforeToday });
+            const monthData = calendarCore.getDateGroup();
+
+            return {
+                monthData
+            }
         }
 
-        console.log('耗时：', Date.now() - start);
+        return null;
+    }
+
+    componentDidMount() {
+        this._location();
+    }
+
+    componentDidUpdate(prevProps: CalendarProps) {
+        if (prevProps.selectionStart !== this.props.selectionStart) {
+            this._location();
+        }
+    }
+
+    scrollIntoView(animated = false) {
+        console.log(this.checkInSectionIndex, this.checkInItemIndex);
+        if (this.SectionListRef) {
+            try {
+                this.SectionListRef.scrollToLocation({
+                    sectionIndex: this.checkInSectionIndex,
+                    itemIndex: this.checkInItemIndex,
+                    viewPosition: 0.5,
+                    animated
+                });
+            } catch (error) {}
+        }
+    }
+
+    private _location() {
+        const { selectionStart } = this.props;
+        this.checkInItemIndex = getWeekOrderInMonth(selectionStart);
+        if (selectionStart) {
+            const index = calendarCore.monthMap.findIndex(m => m === selectionStart.slice(0, 7));
+
+            this.checkInSectionIndex = index === -1 ? 0 : index;
+        }
+    }
+
+    private getItemLayout() {
+        return sectionListGetItemLayout({
+            getItemHeight: (_, __, ___) => this.itemHeight,
+            getSectionHeaderHeight: () => 56, // The height of your section headers
+            getSectionFooterHeight: () => 0, // The height of your section footers
+            listHeaderHeight: 0,
+        })
     }
 
     private _onCheck(dateStr: string) {
@@ -130,19 +220,28 @@ export default class Calendar extends React.PureComponent<CalendarProps, Calenda
     }
 
     private renderSectionItem(section: SectionListRenderItemInfo<WeekGroup>): JSX.Element {
-        const { selectionStart, selectionEnd, selectionStartText, selectionEndText } = this.props;
+        const { selectionStart, selectionEnd, selectionStartText, selectionEndText, markedDates = {}, renderDate } = this.props;
         const { week } = section.item;
 
         return (
-            <View style={styles.monthWeekGroup}>
+            <View
+                style={styles.monthWeekGroup}
+                onLayout={(e) => {
+                    this.itemHeight = e.nativeEvent.layout.height || 60;
+                }}
+            >
                 {week.map((item: DateModel, idx) => {
                     const { date, disabled } = item;
+                    const marking = markedDates ? markedDates[date] : null;
+
                     const cellProps: CellProps = {
                         ...item,
                         selectionStart,
                         selectionEnd,
                         selectionStartText,
-                        selectionEndText
+                        selectionEndText,
+                        marking,
+                        renderDate
                     };
                     return (
                         <TouchableWithoutFeedback
@@ -164,6 +263,7 @@ export default class Calendar extends React.PureComponent<CalendarProps, Calenda
 
     render() {
         const { ListFooterComponent = null } = this.props;
+
         return (
             <View style={styles.calendarContainer}>
                 <View style={styles.weeks}>
@@ -174,9 +274,9 @@ export default class Calendar extends React.PureComponent<CalendarProps, Calenda
                     ))}
                 </View>
                 <SectionList
-                    // ref={(sl) => {
-                    //     this.SectionListRef = sl;
-                    // }}
+                    ref={(sl) => {
+                        this.SectionListRef = sl;
+                    }}
                     initialNumToRender={100} // 为了滚动到底部，舍弃部分性能
                     style={{ paddingHorizontal: 15 }}
                     sections={this.state.monthData}
@@ -187,7 +287,7 @@ export default class Calendar extends React.PureComponent<CalendarProps, Calenda
                     )}
                     ListFooterComponent={ListFooterComponent}
                     renderItem={(item) => this.renderSectionItem(item)}
-                // getItemLayout={this.getItemLayout()}
+                    getItemLayout={this.getItemLayout()}
                 />
             </View>
         );

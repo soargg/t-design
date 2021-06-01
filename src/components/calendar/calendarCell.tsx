@@ -1,11 +1,23 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import holiday from './holiday';
+import { isFunction } from '../common/utils';
 import { compareDate } from './dataUtils';
 import styles from './styles';
 
-
 import type { StyleProp, ViewStyle, TextStyle } from 'react-native';
+
+type CellParams = {
+    date: string;
+    day: number;
+    placeholder: boolean;
+    isToday: boolean;
+    disabled: boolean;
+    dateText: string;
+    isCheck: boolean;
+    isCheckIn: boolean;
+    isCheckOut: boolean;
+    marking: any;
+}
 
 export type CellProps = {
     date: string;
@@ -13,13 +25,16 @@ export type CellProps = {
     placeholder: boolean;
     isToday: boolean;
     disabled: boolean;
+    holiday: string;
     selectionStart: string;
     selectionEnd: string;
     selectionStartText: string;
     selectionEndText: string;
+    marking: any;
+    renderDate?: (params: CellParams) => JSX.Element;
 }
 
-export const Cell = function(props: CellProps): JSX.Element {
+export const Cell = React.memo((props: CellProps): JSX.Element => {
     const {
         date,
         day,
@@ -29,18 +44,16 @@ export const Cell = function(props: CellProps): JSX.Element {
         selectionStart = '',
         selectionEnd = '',
         selectionStartText = '',
-        selectionEndText = ''
+        selectionEndText = '',
+        holiday='',
+        renderDate
     } = props;
-
 
     // 如果只是占位，就直接返回
     if (placeholder || day === 0 || date === '') {
         return null;
     }
 
-    // 公历节日
-    const solar: string = holiday.solar[date.slice(5)];
-    const isholiday: boolean = !!solar;
     // 
     const isCheckIn = selectionStart === date;
     const isCheckOut = selectionEnd === date;
@@ -53,7 +66,7 @@ export const Cell = function(props: CellProps): JSX.Element {
         isCheck = compareDate(crrDate, checkInDate) && compareDate(new Date(selectionEnd), crrDate);
     }
 
-    const dateText: string = isholiday ? solar : (isToday ? '今天' : `${day}`);
+    const dateText: string = !!holiday ? holiday.split(' ')[0] : (isToday ? '今天' : `${day}`);
     // 样式
     const cellstyles: Array<StyleProp<ViewStyle>> = [styles.cell];
     const datetxtStyles: Array<StyleProp<TextStyle>> = [styles.dateTxt];
@@ -62,7 +75,7 @@ export const Cell = function(props: CellProps): JSX.Element {
         datetxtStyles.push(styles.disableDateTxt);
     } else {
         // 节日时或今天
-        if (isToday || isholiday) {
+        if (isToday || !!holiday) {
             datetxtStyles.push(styles.holidayText)
         }
 
@@ -73,6 +86,26 @@ export const Cell = function(props: CellProps): JSX.Element {
             cellstyles.push(styles.range);
         }
     }
+
+    if (isFunction(renderDate)) {
+        const customizedNode: JSX.Element = renderDate({
+            date,
+            day,
+            placeholder,
+            isToday,
+            disabled,
+            dateText,
+            isCheck,
+            isCheckIn,
+            isCheckOut,
+            marking: props.marking
+        });
+
+        if (React.isValidElement(customizedNode)) {
+            return customizedNode;
+        }
+    }
+
     /* 最外层只做入离日期选中的底色处理 */
     return (
         <View style={[styles.cell]}>
@@ -91,4 +124,4 @@ export const Cell = function(props: CellProps): JSX.Element {
             </View>
         </View>
     );
-}
+})

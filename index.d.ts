@@ -514,3 +514,87 @@ type RadioProps = {
 declare class Radio extends React.PureComponent<RadioProps> {
     static readonly Group: typeof RadioGroup;
 }
+
+/**
+ * 日历
+ * Calendar
+ */
+ interface FromToModel {
+    selectionStart: string;
+    selectionEnd: string;
+}
+
+type CellParams = {
+    date: string;
+    day: number;
+    placeholder: boolean;
+    isToday: boolean;
+    disabled: boolean;
+    dateText: string;
+    isCheck: boolean;
+    isCheckIn: boolean;
+    isCheckOut: boolean;
+}
+interface CalendarProps {
+    duration?: number | [string, string],
+    /**
+     * selectionStart
+     * check 开始日期
+     */
+    selectionStart?: string;
+    /**
+     * selectionStartText
+     * check 开始日期提示文案
+     */
+    selectionStartText?: string;
+    /**
+     * selectionEnd
+     * check 结束日期
+     */
+    selectionEnd?: string;
+    /**
+     * selectionEndText
+     * check 结束日期提示文案
+     */
+    selectionEndText?: string;
+    /**
+     * allowSingle
+     * 允许选择单个日期
+     */
+    allowSingle?: boolean;
+    /**
+     * allowSelectionBeforeToday
+     * 允许选择今天之前的日期
+     */
+    allowSelectionBeforeToday?: boolean;
+    /**
+     * markedDates
+     * @param markedDates
+     * 每个日期额外的标记
+     */
+    markedDates?: {
+        [key: string]: {
+            [markingkey: string]: any;
+        };
+    };
+     /**
+     * readerDate
+     * 自定义每一个日期格的样式
+     */
+    renderDate?(day: CellParams): JSX.Element;
+    /**
+     * onChange
+     * @param fromTo FromToModel
+     * 日期选择是回调
+     */
+    onChange?(fromTo: FromToModel): void;
+    /**
+     * Rendered at the very end of the list.
+     */
+    ListFooterComponent?: React.ComponentType<any> | React.ReactElement | null;
+}
+
+declare class Calendar extends React.PureComponent<CalendarProps> {
+    static displayName: string;
+    scrollIntoView(animated: boolean): void;
+}
