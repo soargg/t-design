@@ -14,16 +14,17 @@ interface FromToModel {
     selectionEnd: string;
 }
 
-type CellParams = {
+export type RenderCellProps = {
     date: string;
     day: number;
-    placeholder: boolean;
+    holiday: string;
     isToday: boolean;
     disabled: boolean;
     dateText: string;
     isCheck: boolean;
     isCheckIn: boolean;
     isCheckOut: boolean;
+    marking: any
 }
 interface CalendarProps {
     duration?: number | [string, string],
@@ -71,7 +72,7 @@ interface CalendarProps {
      * readerDate
      * 自定义每一个日期格的样式
      */
-    renderDate?(day: CellParams): JSX.Element;
+    renderDate?(day: RenderCellProps): JSX.Element;
     /**
      * onChange
      * @param fromTo FromToModel
@@ -143,7 +144,6 @@ export default class Calendar extends React.PureComponent<CalendarProps, Calenda
     }
 
     scrollIntoView(animated = false) {
-        console.log(this.checkInSectionIndex, this.checkInItemIndex);
         if (this.SectionListRef) {
             try {
                 this.SectionListRef.scrollToLocation({

@@ -10,6 +10,7 @@ import Alert from './alert';
 import Checkbox from './checkbox';
 import Radio from './radio';
 import Calendar from './calendar';
+import Swiper from './swiper';
 
 export {
     Portal,
@@ -23,5 +24,6 @@ export {
     Alert,
     Checkbox,
     Radio,
-    Calendar
+    Calendar,
+    Swiper
 }

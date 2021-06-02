@@ -6,10 +6,10 @@ import styles from './styles';
 
 import type { StyleProp, ViewStyle, TextStyle } from 'react-native';
 
-type CellParams = {
+type RenderCellProps = {
     date: string;
     day: number;
-    placeholder: boolean;
+    holiday: string;
     isToday: boolean;
     disabled: boolean;
     dateText: string;
@@ -31,7 +31,7 @@ export type CellProps = {
     selectionStartText: string;
     selectionEndText: string;
     marking: any;
-    renderDate?: (params: CellParams) => JSX.Element;
+    renderDate?: (params: RenderCellProps) => JSX.Element;
 }
 
 export const Cell = React.memo((props: CellProps): JSX.Element => {
@@ -91,8 +91,8 @@ export const Cell = React.memo((props: CellProps): JSX.Element => {
         const customizedNode: JSX.Element = renderDate({
             date,
             day,
-            placeholder,
             isToday,
+            holiday,
             disabled,
             dateText,
             isCheck,

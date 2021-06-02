@@ -1,5 +1,7 @@
 const TDesign = {
-    get Portal() { return require('./portal').default },
+    get Portal() {
+        return require('./portal').default
+    },
     get PortalProvider() { return require('./portal/portalProvider').default },
     get Popup() { return require('./popup').default },
     get Rating() { return require('./rating').default },
@@ -11,6 +13,9 @@ const TDesign = {
     get Checkbox() { return require('./checkbox').default },
     get Radio() { return require('./radio').default },
     get Calendar() { return require('./calendar').default },
+    get Swiper() {
+        return require('./swiper').default
+    }
 }
 
 module.exports = TDesign;
