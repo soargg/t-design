@@ -1,26 +1,62 @@
 import React from 'react';
-import {View} from 'react-native';
-import { Calendar } from '../../components'
-
+import {View, Button} from 'react-native';
+import { Calendar, Popup } from '../../components'
 
 export default class CalendarPage extends React.Component {
-    state: {checkIn: string; checkout: string} = {checkIn: '2021-09-24', checkout: '2021-09-25' }
+    private refCalendar: Calendar;
+
+    state: {
+        checkIn: string;
+        checkout: string;
+        show: boolean;
+    } = {
+        checkIn: '2021-06-24',
+        checkout: '2021-06-25',
+        show: false
+    }
+
+    componentDidMount() {
+        if (this.refCalendar) {
+            this.refCalendar.render();
+        }
+    }
+
     render() {
         return (
-            <Calendar
-                allowSelectionBeforeToday
-                duration={['2021-05-31', '2021-10-25']}
-                selectionStartText="入住"
-                selectionEndText="离店"
-                selectionStart={this.state.checkIn}
-                selectionEnd={this.state.checkout}
-                onChange={({ selectionEnd, selectionStart }) => {
+            <>
+                <Button title="日历" onPress={() => {
                     this.setState({
-                        checkIn: selectionStart,
-                        checkout: selectionEnd
+                        show: true
                     })
-                }}
-            />
+                }}/>
+                <Popup
+                    animate="full"
+                    show={this.state.show}
+                    isFullScreen
+                    forceRender
+                >
+                    <Button title="关闭" onPress={() => {
+                        this.setState({
+                            show: false
+                        })
+                    }}/>
+                    <Calendar
+                        ref={c => { this.refCalendar = c }}
+                        allowSelectionBeforeToday
+                        duration={['2021-06-01', '2021-11-25']}
+                        selectionStartText="入住"
+                        selectionEndText="离店"
+                        selectionStart={this.state.checkIn}
+                        selectionEnd={this.state.checkout}
+                        onChange={({ selectionEnd, selectionStart }) => {
+                            this.setState({
+                                checkIn: selectionStart,
+                                checkout: selectionEnd
+                            })
+                        }}
+                    />
+                </Popup>
+            </>
         )
     }
 }

@@ -84,8 +84,6 @@ type PopupState = {
 export default class Popup extends React.PureComponent<PopupProps, PopupState> {
     static get displayName() { return 'Popup' }
 
-    private isRender: boolean;
-
     // 默认Props
     static defaultProps = {
         show: false
@@ -96,7 +94,6 @@ export default class Popup extends React.PureComponent<PopupProps, PopupState> {
         this.state = {
             visible: props.show
         }
-        this.isRender = props.show;
     }
 
     private isAnimationFinished: boolean = true;
@@ -113,9 +110,6 @@ export default class Popup extends React.PureComponent<PopupProps, PopupState> {
     componentDidUpdate(prevProps: PopupProps) {
         // Popup出现时 Android物理返回时处理
         if (prevProps.show !== this.props.show && this.props.show) {
-            if (prevProps.show || !this.isRender) {
-                this.isRender = true
-            }
             this.handleHardwareBack();
         }
     }
@@ -173,7 +167,7 @@ export default class Popup extends React.PureComponent<PopupProps, PopupState> {
         return (
             <Portal zIndex={zIndex}>
                 {
-                    visible || (forceRender && this.isRender) ?
+                    visible || (forceRender) ?
                     // position: 'relative' 兼容 Android 端display:none 不生效
                     <View style={[wrapStyle, { display: visible ? 'flex' : 'none', position: 'relative' }]}>
                         <TouchableWithoutFeedback
@@ -217,7 +211,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'transparent',
-        width: '100%'
+        width: '100%',
+        height: '100%'
     },
     mask: {
         flex: 1,

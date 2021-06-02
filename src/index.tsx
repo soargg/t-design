@@ -7,7 +7,8 @@ import {
     CircularProgress,
     Alert,
     Confirm,
-    Popover
+    Popover,
+    PortalProvider
 } from './components';
 
 import { SwiperLoop, CalendarPage } from './page'
