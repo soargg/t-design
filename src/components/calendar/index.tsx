@@ -103,16 +103,17 @@ export default class Calendar extends React.PureComponent<CalendarProps, Calenda
     private checkInItemIndex: number = 0;
     private checkInSectionIndex: number = 0;
 
+    start: number = Date.now();
+
     constructor(props: CalendarProps) {
         super(props);
         const { duration = 180, allowSelectionBeforeToday=false } = props;
-        const start = Date.now();
         // 先更新
         calendarCore.update({duration, allowSelectionBeforeToday});
         this.state = {
             monthData: calendarCore.getDateGroup()
         }
-        console.log('耗时：', Date.now() - start);
+        console.log('初始数据耗时：', Date.now() - this.start);
     }
 
     static getDerivedStateFromProps(nextProps: CalendarProps) {
@@ -134,6 +135,7 @@ export default class Calendar extends React.PureComponent<CalendarProps, Calenda
     }
 
     componentDidMount() {
+        console.log('挂载耗时：', Date.now() - this.start);
         this._location();
     }
 
