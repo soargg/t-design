@@ -67,25 +67,6 @@ export const Cell = React.memo((props: CellProps): JSX.Element => {
     }
 
     const dateText: string = !!holiday ? holiday.split(' ')[0] : (isToday ? '今天' : `${day}`);
-    // 样式
-    const cellstyles: Array<StyleProp<ViewStyle>> = [styles.cell];
-    const datetxtStyles: Array<StyleProp<TextStyle>> = [styles.dateTxt];
-
-    if (disabled) {
-        datetxtStyles.push(styles.disableDateTxt);
-    } else {
-        // 节日时或今天
-        if (isToday || !!holiday) {
-            datetxtStyles.push(styles.holidayText)
-        }
-
-        if (isCheckIn || isCheckOut) {
-            cellstyles.push(styles.checkInOut);
-            datetxtStyles.push(styles.checkInOutTxt);
-        } else if (isCheck) {
-            cellstyles.push(styles.range);
-        }
-    }
 
     if (isFunction(renderDate)) {
         const customizedNode: JSX.Element = renderDate({
@@ -103,6 +84,26 @@ export const Cell = React.memo((props: CellProps): JSX.Element => {
 
         if (React.isValidElement(customizedNode)) {
             return customizedNode;
+        }
+    }
+
+    // 样式
+    const cellstyles: Array<StyleProp<ViewStyle>> = [styles.cell];
+    const datetxtStyles: Array<StyleProp<TextStyle>> = [styles.dateTxt];
+
+    if (disabled) {
+        datetxtStyles.push(styles.disableDateTxt);
+    } else {
+        // 节日时或今天
+        if (isToday || !!holiday) {
+            datetxtStyles.push(styles.holidayText)
+        }
+
+        if (isCheckIn || isCheckOut) {
+            cellstyles.push(styles.checkInOut);
+            datetxtStyles.push(styles.checkInOutTxt);
+        } else if (isCheck) {
+            cellstyles.push(styles.range);
         }
     }
 

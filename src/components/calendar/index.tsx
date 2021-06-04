@@ -2,7 +2,7 @@ import React from 'react';
 import { SectionList, View, Text, TouchableWithoutFeedback } from 'react-native';
 import sectionListGetItemLayout from '../common/sectionListGetItemLayout';
 import {isFunction} from '../common/utils';
-import { compareDate, getWeekOrderInMonth } from './dataUtils';
+import { compareDate, getWeekOrderInMonth, changeFromTo } from './dataUtils';
 import { CalendarCore, DataSourceModal, WeekGroup, DateModel } from './calendarCore';
 import { Cell, CellProps } from './calendarCell';
 import styles from './styles';
@@ -86,7 +86,9 @@ interface CalendarProps {
 }
 
 interface CalendarState {
-    monthData: DataSourceModal[]
+    monthData: DataSourceModal[],
+    startDate: string;
+    endDate: string;
 }
 
 const calendarCore = new CalendarCore;
@@ -107,30 +109,41 @@ export default class Calendar extends React.PureComponent<CalendarProps, Calenda
 
     constructor(props: CalendarProps) {
         super(props);
-        const { duration = 180, allowSelectionBeforeToday=false } = props;
+        const { duration = 180, allowSelectionBeforeToday=false, selectionEnd, selectionStart } = props;
         // 先更新
         calendarCore.update({duration, allowSelectionBeforeToday});
+        const [startDate, endDate] = changeFromTo(selectionStart, selectionEnd, allowSelectionBeforeToday);
+
         this.state = {
-            monthData: calendarCore.getDateGroup()
+            monthData: calendarCore.getDateGroup(),
+            startDate,
+            endDate
         }
         console.log('初始数据耗时：', Date.now() - this.start);
     }
 
-    static getDerivedStateFromProps(nextProps: CalendarProps) {
+    static getDerivedStateFromProps(nextProps: CalendarProps, prevState: CalendarState) {
         const prevPorps = calendarCore.props;
-        const { duration = 180, allowSelectionBeforeToday=false } = nextProps;
+        const { duration = 180, allowSelectionBeforeToday=false, selectionStart, selectionEnd } = nextProps;
+        const { startDate, endDate } = prevState;
+
+        const nextState: CalendarState = {} as CalendarState;
         if (
             JSON.stringify(duration) !== JSON.stringify(prevPorps.duration) ||
             allowSelectionBeforeToday !== prevPorps.allowSelectionBeforeToday
         ) {
             calendarCore.update({ duration, allowSelectionBeforeToday });
-            const monthData = calendarCore.getDateGroup();
-
-            return {
-                monthData
-            }
+            nextState.monthData = calendarCore.getDateGroup();
         }
 
+        if (startDate !== nextProps.selectionStart || endDate !== nextProps.selectionEnd) {
+            [nextState.startDate, nextState.endDate] = changeFromTo(selectionStart, selectionEnd, allowSelectionBeforeToday);
+        }
+
+        if ('monthData' in nextState || 'startDate' in nextState || 'endDate' in nextState) {
+            return nextState;
+        }
+        
         return null;
     }
 
@@ -222,7 +235,9 @@ export default class Calendar extends React.PureComponent<CalendarProps, Calenda
     }
 
     private renderSectionItem(section: SectionListRenderItemInfo<WeekGroup>): JSX.Element {
-        const { selectionStart, selectionEnd, selectionStartText, selectionEndText, markedDates = {}, renderDate } = this.props;
+        const { selectionStartText, selectionEndText, markedDates = {}, renderDate } = this.props;
+        const {startDate, endDate} = this.state;
+
         const { week } = section.item;
 
         return (
@@ -238,8 +253,8 @@ export default class Calendar extends React.PureComponent<CalendarProps, Calenda
 
                     const cellProps: CellProps = {
                         ...item,
-                        selectionStart,
-                        selectionEnd,
+                        selectionStart: startDate,
+                        selectionEnd: endDate,
                         selectionStartText,
                         selectionEndText,
                         marking,

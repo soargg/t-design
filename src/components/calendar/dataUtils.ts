@@ -323,3 +323,34 @@ export const getDateMonthGroup = (start: Date, end: Date, allowSelectionBeforeTo
         monthMap
     };
 }
+
+export function changeFromTo(fromDateStr: string, toDateStr: string, allowSelectionBeforeToday: boolean = false): [string, string] {
+    if (!fromDateStr) {
+        return ['', ''];
+    }
+
+    const [todayYear, todayMonth, todayDateNum] = getDateInfoArr();
+    // 今天日期，0点开始
+    const todayDate = new Date(todayYear, todayMonth - 1, todayDateNum);
+
+    let fromDate = getDate(fromDateStr);
+    // 不可选前一天
+    if (!allowSelectionBeforeToday && compareDate(fromDate, todayDate)) {
+        fromDate = todayDate;
+    }
+
+    if (!toDateStr) {
+        return [fromDateStr, '']
+    }
+    
+    const toDate = getDate(toDateStr);
+    const compareInOut = compareDate(fromDate, toDate);
+
+    if (compareInOut) {
+        return [toDateStr, fromDateStr];
+    } else if (fromDateStr === toDateStr) {
+        return [fromDateStr, '']
+    }
+
+    return [fromDateStr, toDateStr];
+}
