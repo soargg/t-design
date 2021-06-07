@@ -194,44 +194,41 @@ export default class Calendar extends React.PureComponent<CalendarProps, Calenda
         if (!dateStr) return;
         const { allowSingle = false, onChange } = this.props;
 
-        // 允许单选
-        if (allowSingle) {
-            if (this.selectionIn !== dateStr) {
-                this.selectionIn = dateStr;
-                if (isFunction(onChange)) {
-                    onChange({selectionStart: this.selectionIn, selectionEnd: ''});
-                }
-            }
-            return;
-        }
-
-        if (!this.selectionIn) {
-            // 开始日期没选
-            this.selectionIn = dateStr;
-            this.selectionOut = '';
-        } else if (this.selectionIn && !this.selectionOut) {
-            if (this.selectionIn === dateStr) {
-                // 存在开始日期，且与当前选相同
-                return
-            }
-
-            if (compareDate(new Date(this.selectionIn), new Date(dateStr))) {
-                // 存在开始日期，且小于当前选相同
-                this.selectionIn = dateStr;
-                this.selectionOut = '';
-            } else {
-                this.selectionOut = dateStr;
-            }
-        } else {
-            // 存在两端日期
-            this.selectionIn = dateStr;
-            this.selectionOut = '';
-        }
-
         if (isFunction(onChange)) {
-            onChange({selectionStart: this.selectionIn, selectionEnd: this.selectionOut});
-        }
+            let { startDate: selectionIn, endDate: selectionOut } = this.state;
+            // 允许单选
+            if (allowSingle) {
+                if (selectionIn !== dateStr) {
+                    onChange({selectionStart: dateStr, selectionEnd: ''});
+                }
+                return;
+            }
 
+            if (!selectionIn) {
+                // 开始日期没选
+                selectionIn = dateStr;
+                selectionOut = '';
+            } else if (selectionIn && !selectionOut) {
+                if (selectionIn === dateStr) {
+                    // 存在开始日期，且与当前选相同
+                    return
+                }
+
+                if (compareDate(new Date(selectionIn), new Date(dateStr))) {
+                    // 存在开始日期，且小于当前选相同
+                    selectionIn = dateStr;
+                    selectionOut = '';
+                } else {
+                    selectionOut = dateStr;
+                }
+            } else {
+                // 存在两端日期
+                selectionIn = dateStr;
+                selectionOut = '';
+            }
+
+            onChange({selectionStart: selectionIn, selectionEnd: selectionOut});
+        }
     }
 
     private renderSectionItem(section: SectionListRenderItemInfo<WeekGroup>): JSX.Element {
