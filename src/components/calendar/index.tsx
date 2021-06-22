@@ -95,10 +95,6 @@ const calendarCore = new CalendarCore;
 
 export default class Calendar extends React.PureComponent<CalendarProps, CalendarState> {
     static get displayName() { return 'Calendar' };
-    // 起始日期
-    private selectionIn: string = this.props.selectionStart;
-    // 结束日期
-    private selectionOut: string = this.props.selectionEnd;
 
     private SectionListRef: SectionList;
     private itemHeight: number = 60;

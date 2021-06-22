@@ -11,6 +11,7 @@ import Checkbox from './checkbox';
 import Radio from './radio';
 import Calendar from './calendar';
 import Swiper from './swiper';
+import Carousel from './carousel';
 
 export {
     Portal,
@@ -25,5 +26,6 @@ export {
     Checkbox,
     Radio,
     Calendar,
-    Swiper
+    Swiper,
+    Carousel
 }

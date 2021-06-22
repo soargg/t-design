@@ -1,6 +1,7 @@
 import React from 'react'
 import { Text, View, StyleSheet } from 'react-native'
-import Swiper from 'react-native-swiper'
+// import Swiper from 'react-native-swiper'
+import { Swiper } from '../../components'
 
 var styles = StyleSheet.create({
   wrapper: {},
