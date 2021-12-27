@@ -12,6 +12,8 @@ import Radio from './radio';
 import Calendar from './calendar';
 import Swiper from './swiper';
 import Carousel from './carousel';
+import Tabs from './tabs';
+import Shadow from './shadow';
 
 export {
     Portal,
@@ -27,5 +29,7 @@ export {
     Radio,
     Calendar,
     Swiper,
-    Carousel
+    Carousel,
+    Tabs,
+    Shadow
 }

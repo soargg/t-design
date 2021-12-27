@@ -11,7 +11,7 @@ import {
     PortalProvider
 } from './components';
 
-import { SwiperLoop, CalendarPage, MyCarousel } from './page'
+import { SwiperLoop, CalendarPage, MyCarousel, TabsModule } from './page'
 export default class Home extends React.Component {
 
     state = {
@@ -22,7 +22,8 @@ export default class Home extends React.Component {
         return (
             <SafeAreaView style={{height: 700}}>
                 {/* <MyCarousel /> */}
-                <CalendarPage />
+                {/* <CalendarPage /> */}
+                <TabsModule />
             </SafeAreaView>
         )
         return (

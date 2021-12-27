@@ -19,3 +19,6 @@ export const p1x: number = 1 / Ratio;
 
 const { StatusBarManager } = NativeModules;
 export const andriodStatusBarHeight = isiOS ? 0 : StatusBarManager.HEIGHT;
+
+export const THEME_COLOR = '#FF6E16';
+export const LightFontWeight = isiOS ? '400' : '300';
