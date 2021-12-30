@@ -35,8 +35,6 @@ export default class Radio extends React.PureComponent<RadioProps, RadioState> {
         ischecked: !!this.props.checked
     }
 
-    context: GroupContext;
-
     static getDerivedStateFromProps(nextProps: RadioProps) {
         if ('checked' in nextProps) {
             return {

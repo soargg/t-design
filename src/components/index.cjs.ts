@@ -43,6 +43,12 @@ const TDesign = {
     },
     get Shadow() {
         return require('./shadow').default;
+    },
+    get Exposure() {
+        return require('./exposure').default;
+    },
+    get Button() {
+        return require('./button').default;
     }
 }
 

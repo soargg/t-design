@@ -60,8 +60,6 @@ class Checkbox extends React.PureComponent<CheckboxProps, CheckboxState> {
     
     static contextType = CheckboxGroupContext;
 
-    context: GroupContext;
-
     state: CheckboxState = {
         isChecked: !!this.props.checked
     }

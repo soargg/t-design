@@ -14,6 +14,8 @@ import Swiper from './swiper';
 import Carousel from './carousel';
 import Tabs from './tabs';
 import Shadow from './shadow';
+import Exposure from './exposure';
+import Button from './button';
 
 export {
     Portal,
@@ -31,5 +33,7 @@ export {
     Swiper,
     Carousel,
     Tabs,
-    Shadow
+    Shadow,
+    Exposure,
+    Button
 }

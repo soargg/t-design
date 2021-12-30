@@ -86,3 +86,28 @@ export function shallowCompare<TProps extends Object, TState extends Object>(ins
         !shallowEqual(instance.state, nextState)
     );
 }
+
+export function throttle(func: Function, wait: number = 0): Function {
+    let waiting: boolean = false;
+    let timer: any = null;
+
+    const invokeFunc = <T>(args: T) => {
+        if (waiting) {
+            return;
+        }
+        if (timer) clearTimeout(timer);
+        func.call(func, args);
+
+        waiting = true;
+        timer = setTimeout(() => {
+            waiting = false;
+        }, wait);
+    }
+
+    invokeFunc.cancel = () => {
+        if (timer) clearTimeout(timer);
+    }
+
+    return invokeFunc;
+}
+
