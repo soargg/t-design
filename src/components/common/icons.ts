@@ -18,18 +18,3 @@ export const icon_arrow_down = require('../../images/arrow_down.png');
 
 // fire
 export const icon_fire = require('../../images/fire.png');
-
-// loading
-// export const loadnig_tujia = {uri: 'https://pic.tujia.com/upload/festatic/crn/loading_tujia1.gif'};
-export const loadnig_tujia = {uri: 'https://pic.tujia.com/upload/festatic/crn/tujialoading.gif'};
-export const loading_mayi = {uri: 'https://pic.tujia.com/upload/festatic/crn/loading_mayi.gif'};
-export const loading_shadow = {uri: 'https://pic.tujia.com/upload/festatic/crn/loading_shadow.png'};
-
-// Empty
-export const empty_404 = {uri: 'https://pic.tujia.com/upload/festatic/crn/empty_404.png'};
-export const empty_collect = {uri: 'https://pic.tujia.com/upload/festatic/crn/empty_collect.png'};
-export const empty_message = {uri: 'https://pic.tujia.com/upload/festatic/crn/empty_message.png'};
-export const empty_neterr = {uri: 'https://pic.tujia.com/upload/festatic/crn/empty_neterr.png'};
-export const empty_normal = {uri: 'https://pic.tujia.com/upload/festatic/crn/empty_normal.png'};
-export const empty_order = {uri: 'https://pic.tujia.com/upload/festatic/crn/empty_order.png'};
-export const empty_red_envelopes = {uri: 'https://pic.tujia.com/upload/festatic/crn/empty_envelope.png'};

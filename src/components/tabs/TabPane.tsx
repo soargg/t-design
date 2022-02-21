@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import { TabsContext, TabsContextType } from './TabsContext';
+import { TabsContext } from './TabsContext';
 
 export type TabItemType = ((active: boolean) => React.ReactNode) | string;
 
@@ -21,8 +21,6 @@ export default class TabPane extends React.PureComponent<TabPaneProps, {}> {
         tabkey: null,
         children: null,
     }
-
-    context: TabsContextType;
 
     componentDidMount() {
         if (!this.context) {

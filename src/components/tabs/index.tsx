@@ -2,7 +2,7 @@ import * as React from 'react';
 import { StyleSheet, View, ScrollView, Text, TouchableOpacity, Easing } from 'react-native';
 import TabPane from './TabPane';
 import { isString, isFunction } from '../common/utils';
-import { screenWidth, LightFontWeight, THEME_COLOR } from '../common';
+import { screenWidth, LightFontWeight } from '../common';
 import { TabsContext } from './TabsContext';
 import AnimateView from '../common/animation';
 
@@ -108,28 +108,6 @@ export default class Tabs extends React.PureComponent<TabsProps, TabsState>{
         }
     }
 
-    private _renderUnderLine(): JSX.Element {
-        return (
-            <AnimateView
-                active
-                animationType='scale'
-                easing={Easing.bounce}
-                style={[{backgroundColor: THEME_COLOR}, styles.underLine]}
-            />
-        );
-
-        // return (
-        //     <AnimateView easing={Easing.bounce} active animationType='scale'>
-        //         <LinearGradient
-        //             style={styles.underLine}
-        //             colors={['#FFC776', TUJIA_THEME_COLOR]}
-        //             start={{x: 0.0, y: 0.0}}
-        //             end={{x: 1, y: 0.0}}
-        //         />
-        //     </AnimateView>
-        // );
-    }
-
     // 渲染每个Item
     private _renderTabItem(option: TabOption, index: number) {
         const { activekey } = this.state;
@@ -150,7 +128,14 @@ export default class Tabs extends React.PureComponent<TabsProps, TabsState>{
             <View style={[styles.tabItem, styles.tabItemMain, tabStyle]}>
                 <Text style={textStyle}>{ tab as string }</Text>
                 {
-                    isActive ? <View style={styles.avitveTipWrap}>{ this._renderUnderLine() }</View> : null
+                    isActive ?
+                    <View style={styles.avitveTipWrap}>
+                        <AnimateView easing={Easing.bounce} active animationType='scale'>
+                            <View style={styles.underLine}/>
+                        </AnimateView>
+                    </View>
+                    :
+                    null
                 }
             </View>
         );
@@ -166,7 +151,7 @@ export default class Tabs extends React.PureComponent<TabsProps, TabsState>{
                         tabStyle
                     ]}
                 >
-                    <Text style={isActive ? [styles.itemTxt, {fontWeight: 'bold', color: THEME_COLOR}] : [styles.itemTxt]}>{ tab as string }</Text>
+                    <Text style={isActive ? [styles.itemTxt, {fontWeight: 'bold', color: '#FF6E16'}] : [styles.itemTxt]}>{ tab as string }</Text>
                 </View>
             );
         }
@@ -232,30 +217,34 @@ export default class Tabs extends React.PureComponent<TabsProps, TabsState>{
             <View style={[style]}>
                 {
                     scrollable ?
-                    <ScrollView
-                        ref={s => { this.scroller = s }}
-                        horizontal
-                        bounces
-                        showsHorizontalScrollIndicator={false}
-                        showsVerticalScrollIndicator={false}
-                        scrollsToTop={false}
-                        automaticallyAdjustContentInsets={false}
-                        onLayout={() => {
-                            requestAnimationFrame(() => {
-                                this.moveItemTo();
-                            });
-                        }}
-                        contentContainerStyle={[
-                            styles.tabBar,
-                            {
-                                paddingHorizontal: tabLevel === 2 ? 16 : 5,
-                                backgroundColor: transparent ? 'transparent' : '#FFFFFF'
-                            },
-                            tabBarStyle
-                        ]}
-                    >
-                        { tabs }
-                    </ScrollView>
+                    <View collapsable={false}>
+                        <ScrollView
+                            ref={s => { this.scroller = s }}
+                            horizontal
+                            bounces={false}
+                            alwaysBounceHorizontal={false}
+                            alwaysBounceVertical={false}
+                            showsHorizontalScrollIndicator={false}
+                            showsVerticalScrollIndicator={false}
+                            scrollsToTop={false}
+                            automaticallyAdjustContentInsets={false}
+                            onLayout={() => {
+                                requestAnimationFrame(() => {
+                                    this.moveItemTo();
+                                });
+                            }}
+                            contentContainerStyle={[
+                                styles.tabBar,
+                                {
+                                    paddingHorizontal: tabLevel === 2 ? 16 : 5,
+                                    backgroundColor: transparent ? 'transparent' : '#FFFFFF'
+                                },
+                                tabBarStyle
+                            ]}
+                        >
+                            { tabs }
+                        </ScrollView>
+                    </View>
                     :
                     <View style={[styles.tabBar, {justifyContent: justify, backgroundColor: transparent ? 'transparent' : '#FFFFFF'}, tabBarStyle]}>{ tabs }</View>
                 }
@@ -328,7 +317,8 @@ const styles = StyleSheet.create({
         height: 4,
         marginBottom: 5,
         width: 15,
-        borderRadius: 4
+        borderRadius: 4,
+        backgroundColor: '#FF6E16'
     }
 });
 
